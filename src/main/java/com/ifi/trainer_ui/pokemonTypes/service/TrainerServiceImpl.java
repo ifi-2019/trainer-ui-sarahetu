@@ -3,6 +3,7 @@ package com.ifi.trainer_ui.pokemonTypes.service;
 import com.ifi.trainer_ui.pokemonTypes.bo.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,6 +19,11 @@ public class TrainerServiceImpl implements TrainerService{
 
     private String pokemonServiceUrl;
 
+
+    @Value("${trainer.service.url}")
+    public void setPokemonTypeServiceUrl(String url) {
+        this.pokemonServiceUrl = url;
+    }
     @Override
     public Iterable<Trainer> getAllTrainers() {
         var t = restTemplate.getForObject(pokemonServiceUrl + "/trainers/" , Trainer.class);

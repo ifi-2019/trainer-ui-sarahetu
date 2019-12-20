@@ -19,7 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-/*
+import java.util.Optional;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -40,45 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImp();
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER")
-                .and()
-                .formLogin()
-                .and()
-                .logout()
-                .permitAll()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login")
-                .and()
-                .csrf().disable();
-    }
-
-    public class UserDetailsServiceImp implements UserDetailsService {
-        @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-            Trainer trainer = trainerService.getTrainer(username);
-
-            User.UserBuilder builder = null;
-            if (trainer != null) {
-                builder = org.springframework.security.core.userdetails.User.withUsername(trainer.getName());
-                builder.password(trainer.getPassword());
-                builder.roles("USER");
-            } else {
-                throw new BadCredentialsException("No such user");
-            }
-
-            return builder.build();
-        }
+        return username -> Optional.ofNullable(trainerService.getTrainer(username))
+                .map(trainer ->
+                        User.withUsername(trainer.getName()).password(trainer.getPassword()).authorities("ROLE_USER").build())
+                .orElseThrow(() -> new BadCredentialsException("No such user"));
     }
 }
-*/

@@ -1,6 +1,6 @@
 package com.ifi.trainer_ui.pokemonTypes.bo;
 
-public class Pokemonl {
+public class Pokemonl  {
 
     private int pokemonType;
     private int level;

@@ -2,15 +2,18 @@ package com.ifi.trainer_ui.config;
 
 import com.ifi.trainer_ui.pokemonTypes.bo.Trainer;
 import com.ifi.trainer_ui.pokemonTypes.service.TrainerService;
-import org.apache.catalina.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-/*
+
 class SecurityConfigTest {
 
     @Test
@@ -69,4 +72,3 @@ class SecurityConfigTest {
     }
 
 }
-*/
