@@ -37,11 +37,14 @@ public class TrainerController {
     }
      */
     /*
+
     @GetMapping("/trainers")
-    Iterable<Trainer> getAllTrainers(){
-        return trainerService.getAllTrainers();
+    ModelAndView getAllTrainers(){
+        return new ModelAndView("trainers", "trainers", trainerService.getAllTrainers());
     }
+
      */
+
 
     @GetMapping("/trainers/{name}")
     Trainer getTrainer(@PathVariable String name){
@@ -71,13 +74,14 @@ public class TrainerController {
         return mav;
     }
 
+
     @GetMapping("/trainers")
     public ModelAndView trainers(){
         ModelAndView  mav = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        mav.setViewName("profile");
-        mav.addObject("trainer", trainerService.listOtherTrainers(trainerService.getTrainer(user.getUsername())) );
+        mav.setViewName("trainers");
+        mav.addObject("trainers", trainerService.listOtherTrainers(trainerService.getTrainer(user.getUsername())) );
         mav.addObject("ts",trainerService);
         mav.addObject("pokemon_trainer", pokemonTypeService.listPokemonsTypesByTrainer(trainerService.getTrainer(user.getUsername())) );
         return mav;
