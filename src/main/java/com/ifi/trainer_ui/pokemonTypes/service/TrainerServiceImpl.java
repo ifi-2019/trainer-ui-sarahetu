@@ -7,14 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.*;
 
 
 @Service
 public class TrainerServiceImpl implements TrainerService{
 
-
-    @Autowired
     private RestTemplate restTemplate;
 
     private String pokemonServiceUrl;
@@ -24,10 +22,10 @@ public class TrainerServiceImpl implements TrainerService{
     public void setPokemonTypeServiceUrl(String url) {
         this.pokemonServiceUrl = url;
     }
+
     @Override
-    public Iterable<Trainer> getAllTrainers() {
-        var t = restTemplate.getForObject(pokemonServiceUrl + "/trainers/" , Trainer.class);
-        return Arrays.asList(t);
+    public List<Trainer> getAllTrainers() {
+        return Arrays.asList(restTemplate.getForObject(pokemonServiceUrl + "/trainers/" , Trainer.class));
     }
 
     @Override
@@ -51,6 +49,18 @@ public class TrainerServiceImpl implements TrainerService{
         this.restTemplate = restTemplate;
     }
 
+    @Override
+    public List<Trainer> listOtherTrainers(Trainer principal) {
+        List <Trainer> list = new LinkedList<>(getAllTrainers());
+        Iterator<Trainer> i = list.iterator();
+        while (i.hasNext()) {
+            Trainer t = i.next(); // must be called before you can call i.remove()
+            if (principal.getName().equals(t.getName())) {
+                i.remove();
+            }
+        }
+        return list;
+    }
 
 
 }

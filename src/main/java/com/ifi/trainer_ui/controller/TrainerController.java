@@ -1,5 +1,6 @@
 package com.ifi.trainer_ui.controller;
 
+import com.ifi.trainer_ui.pokemonTypes.bo.Pokemonl;
 import com.ifi.trainer_ui.pokemonTypes.bo.Trainer;
 import com.ifi.trainer_ui.pokemonTypes.service.PokemonTypeService;
 import com.ifi.trainer_ui.pokemonTypes.service.TrainerService;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -34,11 +36,12 @@ public class TrainerController {
         this.trainerService = trainerService;
     }
      */
-
+    /*
     @GetMapping("/trainers")
     Iterable<Trainer> getAllTrainers(){
         return trainerService.getAllTrainers();
     }
+     */
 
     @GetMapping("/trainers/{name}")
     Trainer getTrainer(@PathVariable String name){
@@ -60,10 +63,23 @@ public class TrainerController {
     ModelAndView getProfil(){
         ModelAndView  mav = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User principal = (User) auth.getPrincipal();
+        User user = (User) auth.getPrincipal();
         mav.setViewName("profile");
-        mav.addObject("trainer", trainerService.getTrainer(principal.getUsername()) );
+        mav.addObject("trainer", trainerService.getTrainer(user.getUsername()) );
         mav.addObject("ts",trainerService);
+        mav.addObject("pokemon_trainer", pokemonTypeService.listPokemonsTypesByTrainer(trainerService.getTrainer(user.getUsername())) );
+        return mav;
+    }
+
+    @GetMapping("/trainers")
+    public ModelAndView trainers(){
+        ModelAndView  mav = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        mav.setViewName("profile");
+        mav.addObject("trainer", trainerService.listOtherTrainers(trainerService.getTrainer(user.getUsername())) );
+        mav.addObject("ts",trainerService);
+        mav.addObject("pokemon_trainer", pokemonTypeService.listPokemonsTypesByTrainer(trainerService.getTrainer(user.getUsername())) );
         return mav;
     }
 
