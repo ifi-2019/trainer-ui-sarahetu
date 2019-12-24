@@ -6,3 +6,5 @@ http://localhost:9000/login
 
 http://localhost:9000/profile
 
+http://localhost:9000/trainers
+
